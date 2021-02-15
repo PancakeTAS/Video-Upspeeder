@@ -1,6 +1,5 @@
 package work.mgnet.upspeedilon;
 
-import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,17 +12,10 @@ import java.time.Duration;
 
 import org.jcodec.api.FrameGrab;
 import org.jcodec.api.JCodecException;
-import org.jcodec.api.SequenceEncoder;
-import org.jcodec.codecs.h264.H264Utils;
-import org.jcodec.codecs.h264.H264Utils2;
-import org.jcodec.common.JCodecUtil;
-import org.jcodec.common.io.IOUtils;
 import org.jcodec.common.io.NIOUtils;
-import org.jcodec.common.tools.MainUtils;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSlider;
-import com.sun.awt.AWTUtilities;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -50,7 +42,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import net.lingala.zip4j.core.ZipFile;
-import sun.nio.ch.IOUtil;
 
 public class Upspeeder extends Application {
 
@@ -92,14 +83,14 @@ public class Upspeeder extends Application {
 			@Override
 			public void run() {
 				try {
-					File ffmpeg = new File(System.getenv("AppData"), "upspeeder/ffmpeg/ffmpeg-N-100872-gd8b2fae3c7-win64-gpl/bin/");
+					File ffmpeg = new File(System.getenv("AppData"), "upspeeder/ffmpeg/ffmpeg-N-101101-gc0d0b1c4f6-win64-gpl/bin/");
 					if (ffmpeg.exists()) {
 						return;
 					}
 					File upspeeder = new File(System.getenv("AppData"), "upspeeder/");
 					upspeeder.mkdir();
 					System.out.println("Downloading FFmpeg.");
-					URL url = new URL("https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2021-01-29-12-37/ffmpeg-N-100872-gd8b2fae3c7-win64-gpl.zip");
+					URL url = new URL("https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2021-02-15-12-41/ffmpeg-N-101101-gc0d0b1c4f6-win64-gpl.zip");
 					ReadableByteChannel rbc = Channels.newChannel(url.openStream());
 					FileOutputStream fos = new FileOutputStream(new File(System.getenv("AppData"), "upspeeder/ffmpeg.zip"));
 					fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
@@ -179,8 +170,6 @@ public class Upspeeder extends Application {
 				 inputfile = chooser.showOpenDialog(primaryStage);
 				 
 				 loadFileData();
-				 int time = (int) grab.getVideoTrack().getMeta().getTotalDuration();
-				 //estfilesizeo.setValue("Est: " + String.format("%.2f", (time * bitrate.doubleValue()) / 10000000f) + "Gb");
 				 recalculateOutput();
 			}
 		});
@@ -279,7 +268,7 @@ public class Upspeeder extends Application {
 		outputFileButton = new JFXButton("Start");
 		outputFileButton.setPrefSize(180, 47);
 		outputFileButton.setLayoutX(20);
-		File ffmpeg = new File(System.getenv("AppData"), "upspeeder/ffmpeg/ffmpeg-N-100872-gd8b2fae3c7-win64-gpl/bin/");
+		File ffmpeg = new File(System.getenv("AppData"), "upspeeder/ffmpeg/ffmpeg-N-101101-gc0d0b1c4f6-win64-gpl/bin/");
 		if (!ffmpeg.exists()) outputFileButton.setDisable(true);
 		outputFileButton.setStyle("-fx-background-color: #5b7784; -fx-text-fill: white");
 		outputFileButton.setLayoutY(155);
@@ -326,7 +315,7 @@ public class Upspeeder extends Application {
 	
 	private Pane getHBoxPane() {
 		progressbar = new ProgressBar();
-		File ffmpeg = new File(System.getenv("AppData"), "upspeeder/ffmpeg/ffmpeg-N-100872-gd8b2fae3c7-win64-gpl/bin/");
+		File ffmpeg = new File(System.getenv("AppData"), "upspeeder/ffmpeg/ffmpeg-N-101101-gc0d0b1c4f6-win64-gpl/bin/");
 		if (ffmpeg.exists()) progressbar.setProgress(0);
 		progressbar.setPrefHeight(20);
 		progressbar.setPrefWidth(900);
@@ -355,7 +344,7 @@ public class Upspeeder extends Application {
 			@Override
 			public void run() {
 				try {
-					File ffmpeg = new File(System.getenv("AppData"), "upspeeder/ffmpeg/ffmpeg-N-100872-gd8b2fae3c7-win64-gpl/bin/ffmpeg.exe");
+					File ffmpeg = new File(System.getenv("AppData"), "upspeeder/ffmpeg/ffmpeg-N-101101-gc0d0b1c4f6-win64-gpl/bin/ffmpeg.exe");
 					String command = ffmpeg.getAbsolutePath() + " -hwaccel cuda -an -sn -r 60 -hwaccel_output_format cuda -i \"" + inputfile.getAbsolutePath() + "\" -b:v " + (bitrate.intValue() * 1000) + " -y -c:v h264_nvenc -filter:v \"setpts=" + speed + "*PTS\" \"" + outputfile.getAbsolutePath() + "\"";
 					System.out.println(command);
 					ProcessBuilder builder = new ProcessBuilder(command.split(" "));
